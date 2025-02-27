@@ -1,7 +1,6 @@
 // App.tsx
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Dashboard from './pages/Dashboard.tsx';
 import HomePage from './pages/HomePage.tsx';
 import FollowPage from './pages/FollowPage.tsx';
 import PreviousTradesPage from './pages/PreviousTradesPage.tsx';
@@ -13,7 +12,6 @@ const App: React.FC = () => {
     <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/follow" element={<FollowPage />} />
         <Route path="/previous-trades" element={<PreviousTradesPage />} />
         <Route path="/swap" element={<SwapPage />} />
