@@ -38,7 +38,7 @@ const OpenCloseWallet = () => {
   
 
   return (
-    <div className="">
+    <div className="mr-4">
       {account ? (
         <div className="flex items-end flex-col hover:cursor-pointer">
           <div onClick={() => setIsWalletClicked(!isWalletClicked)} className="hover:bg-neutral-700 rounded-2xl">
