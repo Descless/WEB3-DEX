@@ -72,12 +72,12 @@ const onBuyCoinTypeChange = (coin: any) => {
 }
 
     return (
-        <main className="bg-neutral-700 flex flex-grow flex-col min-h-screen">
+        <main className="bg-neutral-800 flex flex-grow flex-col min-h-screen">
         <Navbar/>
         
         {/* Header Text */}
-        <div className=" w-full flex text-center flex-col text-white mb-16 mt-16 h-screen items-center">
-            <h1 className="font-bold text-3xl">Hoş geldiniz, hemen hızlıca swap yapın!</h1>
+        <div className=" w-full flex text-center flex-col text-white mb-16 mt-16 items-center">
+            <h1 className="font-semibold text-3xl">Welcome! Swap instantly!</h1>
 
         <div className="w-1/3 flex flex-col mt-16 rounded-2xl bg-neutral-900 p-2">
 
@@ -87,7 +87,7 @@ const onBuyCoinTypeChange = (coin: any) => {
         
         {/* Coin Input Value*/}
         <div className="flex flex-col pl-2 gap-y-2 md:w-2/3"> 
-            <h1 className="text-neutral-300 ">Satılan</h1>
+            <h1 className="text-neutral-300 ">Sell</h1>
 
             {/* Coin Value*/}
             <input className="text-neutral-300 text-2xl cursor-text md:text-base lg:text-2xl" type="number" placeholder="0" onChange={(e) => onInputCoinChange(e.target.value)}/>
@@ -134,7 +134,7 @@ const onBuyCoinTypeChange = (coin: any) => {
 
             {/* Coin Output Value */}
             <div className="flex flex-col pl-2 gap-y-2 w-full mb-4 md:w-2/3 m">
-            <h1 className="text-neutral-300">Alınan</h1>
+            <h1 className="text-neutral-300">Buy</h1>
             <h1 className="text-neutral-300 cursor-text md:text-base lg:text-2xl">{inputCoinValue ? String(inputCoinValue * ((selectedBuyCoinType && selectedSellCoinType && selectedSellCoinType.id !== selectedBuyCoinType?.id)
             ? (coinRates[selectedBuyCoinType?.id || ""]?.usd ?? 1) /
               (coinRates[selectedSellCoinType?.id || ""]?.usd ?? 1)
@@ -176,12 +176,14 @@ const onBuyCoinTypeChange = (coin: any) => {
 
         {/* Trade Button*/}
         <div className=" flex flex-col text-start bg-neutral-800 mt-2 ">
-            <button className="cursor-pointer rounded-2xl bg-neutral-600 p-3 text-neutral-200">Takas Et</button>
+            <button className="cursor-pointer rounded-2xl bg-neutral-600 p-3 text-neutral-200">Swap</button>
         </div>
 
         </div>
         </div>
+        <div className="-bottom-0 absolute w-full">
         <Footer/>
+        </div>
         </main>
     );
 };

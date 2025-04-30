@@ -1,5 +1,5 @@
 // components/ConnectWallet.tsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import detectEthereumProvider from "@metamask/detect-provider";
 import MetaMaskLogo from "../assets/img/MetaMask_Fox.svg"
@@ -7,10 +7,10 @@ import { NavLink } from "react-router-dom";
 
 const ConnectWallet: React.FC = () => {
   const [account, setAccount] = useState<string | null>(null);
+  const [balance, setBalance] = useState<number | null>(null);
   const [isLoginClicked, setIsLoginClicked] = useState<boolean>(false);
   const [isWalletOpened, setIsWalletOpened] = useState<boolean>(false);
   const [isWalletClicked, setIsWalletClicked] = useState<boolean>(false);
-  const [userBalance, setUserBalance] = useState<number>(0.0);
 
   const logOut = () => {
     setAccount(null)
@@ -19,6 +19,9 @@ const ConnectWallet: React.FC = () => {
 
 const OpenCloseWallet = () => {
   setIsWalletOpened(!isWalletOpened);
+  if (isWalletClicked) {
+    setIsWalletClicked(false)
+  }
 };
 
   const connectWallet = async () => {
@@ -35,22 +38,36 @@ const OpenCloseWallet = () => {
 
     setIsLoginClicked(!isLoginClicked)
   };
+
+  const getBalance = async (account: string) => {
+    const provider: any = await detectEthereumProvider();
+    const ethersProvider = new ethers.BrowserProvider(provider);
+
+    const balance = await ethersProvider.getBalance(account);
+    const ethBalance = ethers.formatEther(balance); // Wei → ETH
+    setBalance(Number(ethBalance));
+  };
   
+  useEffect(() => {
+    if (account) {
+      getBalance(account);
+    }
+  }, [account]);
 
   return (
     <div className="mr-4">
       {account ? (
         <div className="flex items-end flex-col hover:cursor-pointer">
           <div onClick={() => setIsWalletClicked(!isWalletClicked)} className="hover:bg-neutral-700 rounded-2xl">
-          <p className="text-white px-4 py-2 font-bold ">Cüzdan: {account.substring(0, 10)}...</p>
+          <p className="text-white px-4 py-2 font-bold ">Wallet: {account.substring(0, 10)}...</p>
           </div>
           {isWalletClicked && (
-          <div className="p-4 absolute mt-12 w-1/6 bg-neutral-800 border rounded-2xl border-neutral-500">
+          <div className="p-4 absolute mt-12 w-1/6 bg-neutral-900 border rounded-2xl border-neutral-500">
             <div onClick={() => OpenCloseWallet()} className="rounded-2xl hover:cursor-pointer hover:bg-neutral-600 items-center p flex flex-row">
-              <h3 className="p-2 font-bold">Cüzdan</h3>
+              <h3 className="p-2 font-bold">Wallet</h3>
               </div>
             <div onClick={() => logOut()} className="rounded-2xl hover:cursor-pointer hover:bg-neutral-600 items-center p flex flex-row">
-              <h3 className="p-2 font-bold">Çıkış Yap</h3>
+              <h3 className="p-2 font-bold">Log Out</h3>
               </div>
           </div>
         )}
@@ -60,12 +77,12 @@ const OpenCloseWallet = () => {
         
       ) : (
         <div className="flex items-end flex-col">
-        <button onClick={() => setIsLoginClicked(!isLoginClicked)} className="justify-end px-4 py-2 rounded-4xl bg-gray-300 text-black">
-          Bağlan
+        <button onClick={() => setIsLoginClicked(!isLoginClicked)} className="justify-end px-4 py-2 rounded-2xl bg-neutral-700 hover:cursor-pointer hover:bg-neutral-600 text-white">
+          Connect
         </button>
         {isLoginClicked && (
-          <div className="p-4 absolute mt-12 w-1/5 bg-neutral-800 border rounded-2xl border-neutral-500">
-           <h3 className="font-bold mb-4">Bir Cüzdan Seç</h3>
+          <div className="p-4 absolute mt-12 w-1/5 bg-neutral-900 border rounded-2xl border-neutral-500">
+           <h3 className="font-bold mb-4">Choose A Wallet</h3>
             <div onClick={connectWallet} className="bg-neutral-700 rounded-2xl hover:cursor-pointer hover:bg-neutral-600 items-center p-2 flex flex-row">
               <img src={MetaMaskLogo} alt="meta mask logo" className="w-8 h-8" />
               <h3 className="p-4 font-bold text-lg">Metamask</h3>
@@ -78,8 +95,9 @@ const OpenCloseWallet = () => {
     {isWalletOpened ?
     //dashboard
 
-    <div className="absolute items-center justify-center flex bg-current/20 w-full min-h-screen">
-    <main className="p-4 absolute w-1/3 mt-12 bg-neutral-800 border rounded-2xl border-neutral-500">
+    <div className="absolute flex w-full  mt-2.5">
+    <div className="w-4/5"></div>
+    <main className="p-2 mt-1 bg-neutral-900 border rounded-2xl border-neutral-500">
 
 <div className=" text-white mt-4 mb-4 flex flex-row items-center">
   <div className="flex flex-col w-full">
@@ -100,13 +118,13 @@ const OpenCloseWallet = () => {
     </div>
         
     <div className=" text-white mb-4">
-        <h1 className="ml-4 text-xl font-bold">{userBalance}$</h1>
+        <h1 className="ml-4 text-lg">{balance}$</h1>
 
     </div>
 
     <div className=" text-white mb-4">
-        <NavLink className="flex flex-row gap-2 items-center w-5/6" to={"/previous-trades"}>
-        <h1 className="hover:cursor-pointer ml-4 text-lg font-bold">Recent Transactions</h1>
+        <NavLink className="flex flex-row gap-2 items-center w-5/6" to={"#"}>
+        <h1 className="hover:cursor-pointer ml-4 text-lg font-bold">Previous Trades</h1>
         <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -122,14 +140,14 @@ const OpenCloseWallet = () => {
          </div>
 
          <div className=" text-white mb-4">
-        <NavLink className="flex flex-row gap-2 items-center w-5/6" to={"/swap"}>
+        <NavLink className="flex flex-row gap-2 items-center w-5/6" to={"/"}>
         <h1 className="hover:cursor-pointer ml-4 text-lg font-bold">Buy Crypto</h1>
           </NavLink>
          </div>
          <div className=" text-white mb-4">
-        <NavLink className="flex flex-row gap-2 items-center w-5/6" to={"/trade"}>
+        {/* <NavLink className="flex flex-row gap-2 items-center w-5/6" to={"/"}>
         <h1 className="hover:cursor-pointer ml-4 text-lg font-bold">Trade Crypto</h1>
-          </NavLink>
+          </NavLink> */}
          </div>
     </main>
     </div>

@@ -4,7 +4,7 @@ import Navbar from "../components/Navbar";
 
 const FollowPage = () => {
     return (
-        <main className="bg-neutral-700 flex flex-grow flex-col min-h-screen">
+        <main className="bg-neutral-800 flex flex-grow flex-col min-h-screen">
         <Navbar/>
 
             
